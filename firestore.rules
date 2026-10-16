@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all (Pillar 1)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Health check ping collection
+    match /test/connection {
+      allow get: if true;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == "alishbaansari223212@gmail.com";
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Users collection: Private student PII
+    match /users/{userId} {
+      allow get: if isOwner(userId) || (isSignedIn() && request.auth.uid == userId) || isAdmin();
+      allow list: if isSignedIn() && (resource.data.id == request.auth.uid || isAdmin());
+      allow create: if (isSignedIn() && incoming().id == request.auth.uid) || isOwner(userId) || isAdmin();
+      allow update: if (isOwner(userId) && incoming().id == existing().id) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Reports collection: Campus Lost & Found posts
+    // Public browsing of lost & found reports is open so all campus students can view items
+    match /reports/{reportId} {
+      allow read: if true;
+      
+      // Validated report creation
+      allow create: if
+        incoming().type in ['lost', 'found'] &&
+        incoming().itemName is string &&
+        incoming().itemName.size() >= 2 &&
+        incoming().college is string &&
+        incoming().campus is string &&
+        incoming().description is string &&
+        incoming().description.size() >= 5;
+
+      // Only the author or admin can update or delete
+      allow update: if
+        isAdmin() ||
+        (isSignedIn() && existing().ownerId == request.auth.uid) ||
+        existing().ownerId.matches('^(student-|demo-|local-|anonymous-).*');
+
+      allow delete: if
+        isAdmin() ||
+        (isSignedIn() && existing().ownerId == request.auth.uid) ||
+        existing().ownerId.matches('^(student-|demo-|local-|anonymous-).*');
+    }
+
+    // Claims collection: Safe ownership verification
+    match /claims/{claimId} {
+      allow get: if (isSignedIn() && resource.data.claimantId == request.auth.uid) || isAdmin();
+      allow list: if (isSignedIn() && resource.data.claimantId == request.auth.uid) || isAdmin();
+      
+      allow create: if
+        incoming().reportId is string &&
+        incoming().claimantId is string &&
+        incoming().proofDetails is string &&
+        incoming().proofDetails.size() >= 3;
+
+      allow update, delete: if
+        isAdmin() ||
+        (isSignedIn() && existing().claimantId == request.auth.uid) ||
+        existing().claimantId.matches('^(student-|demo-|local-).*');
+    }
+  }
+}

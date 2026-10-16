@@ -1,0 +1,8 @@
+{
+  "name": "FindIt Campus",
+  "description": "Smart college lost and found platform for Poona College of Arts, Science & Commerce with intelligent fuzzy matching, real-time Firestore reporting, and PWA support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

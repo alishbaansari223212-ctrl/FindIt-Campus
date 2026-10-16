@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="forestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b4931"/>
+      <stop offset="100%" stop-color="#0e2b1e"/>
+    </linearGradient>
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="coralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle with dark forest green -->
+  <rect width="512" height="512" rx="128" fill="url(#forestGrad)"/>
+
+  <!-- Subtle concentric campus grid rings -->
+  <circle cx="256" cy="240" r="180" fill="none" stroke="#34d399" stroke-opacity="0.12" stroke-width="2"/>
+  <circle cx="256" cy="240" r="130" fill="none" stroke="#34d399" stroke-opacity="0.18" stroke-width="2"/>
+
+  <!-- Location Pin (Campus symbol) -->
+  <g filter="url(#shadow)">
+    <!-- Pin Body -->
+    <path d="M 256,90 C 185,90 130,145 130,216 C 130,305 240,410 250,420 C 253,423 259,423 262,420 C 272,410 382,305 382,216 C 382,145 327,90 256,90 Z" 
+          fill="#faf6ec"/>
+    <!-- Outer ring of pin head in mint -->
+    <circle cx="256" cy="216" r="68" fill="url(#forestGrad)"/>
+    
+    <!-- Magnifying Glass (Search symbol) nested inside the pin -->
+    <!-- Lens rim in mint green -->
+    <circle cx="244" cy="204" r="34" fill="none" stroke="url(#mintGrad)" stroke-width="10"/>
+    <!-- Lens glass reflection -->
+    <path d="M 226,186 A 24 24 0 0 1 254,186" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+    <!-- Magnifier handle -->
+    <path d="M 268,228 L 296,256" stroke="url(#coralGrad)" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Sparkle / match pulse in top right of pin -->
+    <circle cx="298" cy="162" r="7" fill="#34d399"/>
+  </g>
+</svg>

@@ -1,0 +1,186 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Student profile with authentication and college affiliation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique Firebase Auth user identifier",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Full name of the student",
+          "maxLength": 100,
+          "minLength": 2
+        },
+        "email": {
+          "type": "string",
+          "description": "Student email address",
+          "maxLength": 120
+        },
+        "college": {
+          "type": "string",
+          "description": "Name of the college or university",
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp of registration"
+        }
+      },
+      "required": ["id", "displayName", "email", "college"]
+    },
+    "Report": {
+      "title": "Lost and Found Report",
+      "description": "Item reported as lost or found within the campus.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique report identifier",
+          "maxLength": 128
+        },
+        "type": {
+          "type": "string",
+          "description": "Report classification: lost or found",
+          "enum": ["lost", "found"]
+        },
+        "itemName": {
+          "type": "string",
+          "description": "Name of the item",
+          "maxLength": 120,
+          "minLength": 2
+        },
+        "category": {
+          "type": "string",
+          "description": "Item category",
+          "maxLength": 60
+        },
+        "college": {
+          "type": "string",
+          "description": "Name of college institution",
+          "maxLength": 150
+        },
+        "campus": {
+          "type": "string",
+          "description": "Campus, building, wing, or area",
+          "maxLength": 150
+        },
+        "location": {
+          "type": "string",
+          "description": "Precise spot where item was lost or found",
+          "maxLength": 150
+        },
+        "description": {
+          "type": "string",
+          "description": "Identifying details and characteristics",
+          "maxLength": 1000,
+          "minLength": 5
+        },
+        "date": {
+          "type": "string",
+          "description": "Date item was lost or found in YYYY-MM-DD format",
+          "maxLength": 20
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "Optional photo data URL or image storage reference",
+          "maxLength": 500000
+        },
+        "collectionStatus": {
+          "type": "string",
+          "description": "For found items: safe custody location",
+          "enum": ["Staff Room", "Teacher", "College Office", "Security Desk", "With Finder", "Other", ""]
+        },
+        "status": {
+          "type": "string",
+          "description": "Resolution status of the report",
+          "enum": ["open", "claimed", "resolved"]
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Auth UID of the reporter",
+          "maxLength": 128
+        },
+        "ownerName": {
+          "type": "string",
+          "description": "Display name of reporter",
+          "maxLength": 100
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when report was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when report was last modified"
+        }
+      },
+      "required": ["type", "itemName", "college", "campus", "location", "description", "date", "status", "ownerId"]
+    },
+    "Claim": {
+      "title": "Ownership Verification Claim",
+      "description": "Claim submitted by a student to verify ownership and arrange handover.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Claim record identifier",
+          "maxLength": 128
+        },
+        "reportId": {
+          "type": "string",
+          "description": "Target report document identifier",
+          "maxLength": 128
+        },
+        "claimantId": {
+          "type": "string",
+          "description": "Auth UID of the student submitting the claim",
+          "maxLength": 128
+        },
+        "claimantName": {
+          "type": "string",
+          "description": "Student claim name",
+          "maxLength": 100
+        },
+        "proofDetails": {
+          "type": "string",
+          "description": "Private identifying proof or serial number description",
+          "maxLength": 1000
+        },
+        "contactMethod": {
+          "type": "string",
+          "description": "Preferred handover contact note",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the claim verification",
+          "enum": ["pending", "verified", "rejected"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of claim creation"
+        }
+      },
+      "required": ["reportId", "claimantId", "claimantName", "proofDetails", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individual student profile data accessible by the student."
+    },
+    "/reports/{reportId}": {
+      "schema": "Report",
+      "description": "Lost and found reports on campus with item information and collection status."
+    },
+    "/claims/{claimId}": {
+      "schema": "Claim",
+      "description": "Item ownership claims submitted for verification."
+    }
+  }
+}
